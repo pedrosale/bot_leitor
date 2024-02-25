@@ -1,6 +1,5 @@
 import openai
 import streamlit as st
-from streamlit_chat import message
 from langchain.chains import ConversationalRetrievalChain
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.llms import CTransformers
