@@ -4,7 +4,7 @@
 # In[7]:
 
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 
 
 # In[11]:
