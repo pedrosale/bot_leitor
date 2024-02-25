@@ -11,12 +11,10 @@ from langchain.llms import OpenAI
 from langchain.chains import ConversationalRetrievalChain
 import os
 
-os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
-
 # Configurações do ChatBot
 st.title("Este é o ChatBot desenvolvido por Pedro Sampaio Amorim. Inclua um texto para debater com o bot!")
 
-openai.api_key = OPENAI_API_KEY
+openai.api_key = st.secrets['OPENAI_API_KEY']
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
