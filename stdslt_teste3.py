@@ -4,7 +4,7 @@
 # In[7]:
 
 
-from secrets import OPENAI_API_KEY
+from config import OPENAI_API_KEY
 
 
 
