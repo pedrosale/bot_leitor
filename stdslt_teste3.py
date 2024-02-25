@@ -12,12 +12,10 @@ from langchain.document_loaders import TextLoader
 from langchain.document_loaders import Docx2txtLoader
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 import os
-from dotenv import load_dotenv
 import tempfile
 import urllib.request
 import requests
 
-load_dotenv()
 
 def initialize_session_state():
     if 'history' not in st.session_state:
@@ -57,7 +55,7 @@ def display_chat_history(chain):
                 st.write(st.session_state["generated"][i], key=str(i))
 
 def create_conversational_chain(vector_store):
-    load_dotenv()
+
     openai_api_key = os.getenv("OPENAI_API_KEY")  # Acessando a variável de ambiente OPENAI_API_KEY
     llm = OpenAI(
         model="gpt-3.5-turbo",
@@ -75,7 +73,7 @@ def create_conversational_chain(vector_store):
 
 
 def main():
-    load_dotenv()
+
     # Initialize session state
     initialize_session_state()
     st.title('[Versão 3.0] GPT Chatbot.')
