@@ -1,17 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[7]:
-
-
-
-
-
-
-
-# In[11]:
-
-
 import openai
 import streamlit as st
 import pandas as pd
@@ -23,13 +9,6 @@ from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 from langchain.chains import ConversationalRetrievalChain
-
-
-# In[12]:
-
-
-import streamlit as st
-import openai
 
 os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 
