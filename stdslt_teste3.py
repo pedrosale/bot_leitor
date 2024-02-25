@@ -4,7 +4,7 @@
 # In[7]:
 
 
-os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
+
 
 
 
@@ -30,6 +30,8 @@ from langchain.chains import ConversationalRetrievalChain
 
 import streamlit as st
 import openai
+
+os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 
 # Configurações do ChatBot
 st.title("Este é o ChatBot desenvolvido por Pedro Sampaio Amorim. Inclua um texto para debater com o bot!")
