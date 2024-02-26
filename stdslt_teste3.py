@@ -54,14 +54,13 @@ for message in st.session_state.messages:
 if prompt_tipo_2 := st.text_input("Enviou o texto ? Se sim, o que você gostaria de discutir sobre ele? Caso não queira falar sobre texto, do que deseja falar?"):
     st.session_state.messages.append({"role": "user", "content": prompt_tipo_2, "tipo": "tipo_2"})
 
-    # Gera a resposta do ChatBot
+    # Inicializa a variável chain com uma instância de ConversationalRetrievalChain
+    chain = ConversationalRetrievalChain.from_settings({"model": st.session_state["openai_model"], "language": "pt-BR"})
+    full_response = ""
+    if prompt_tipo_2:
+        full_response = conversation_chat(prompt_tipo_2, chain, st.session_state.messages.copy())
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
-        full_response = ""
-        chain = None  # Aqui você precisa inicializar a variável de cadeia de conversação
-        history = st.session_state.messages.copy()  # Crie uma cópia do histórico para passar para a função
-        if prompt_tipo_2:
-            full_response = conversation_chat(prompt_tipo_2, chain, history)
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
             messages=[
