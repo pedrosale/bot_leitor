@@ -5,7 +5,6 @@ transformers==4.35.0
 langchain
 torch
 accelerate
-sentence_transformers
 streamlit_chat
 streamlit
 faiss-cpu
