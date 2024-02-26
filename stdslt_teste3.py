@@ -1,6 +1,7 @@
 import openai
 import streamlit as st
 import pandas as pd
+from transformers import GPT2Tokenizer
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
@@ -22,13 +23,6 @@ if "openai_model" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-def conversation_chat(query, chain, history):
-    prompt = "Você é um assistente que só conversa no idioma português do Brasil (você nunca, jamais conversa em outro idioma que não seja o português do Brasil):\n\n"  # Adicionando prompt para indicar o idioma
-    query_with_prompt = prompt + query
-    result = chain({"question": query_with_prompt, "chat_history": history})
-    history.append((query, result["answer"]))
-    return result["answer"]
 
 # Carrega o texto diretamente de um link
 file_path1 = "https://raw.githubusercontent.com/pedrosale/falcon_test/main/PSA"
@@ -54,13 +48,10 @@ for message in st.session_state.messages:
 if prompt_tipo_2 := st.text_input("Enviou o texto ? Se sim, o que você gostaria de discutir sobre ele? Caso não queira falar sobre texto, do que deseja falar?"):
     st.session_state.messages.append({"role": "user", "content": prompt_tipo_2, "tipo": "tipo_2"})
 
-    # Inicializa a variável chain com uma instância de ConversationalRetrievalChain
-    chain = ConversationalRetrievalChain(model=st.session_state["openai_model"], language="pt-BR")
-    full_response = ""
-    if prompt_tipo_2:
-        full_response = conversation_chat(prompt_tipo_2, chain, st.session_state.messages.copy())
+    # Gera a resposta do ChatBot
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
+        full_response = ""
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
             messages=[
