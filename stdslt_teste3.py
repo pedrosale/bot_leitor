@@ -55,7 +55,7 @@ if prompt_tipo_2 := st.text_input("Enviou o texto ? Se sim, o que você gostaria
     st.session_state.messages.append({"role": "user", "content": prompt_tipo_2, "tipo": "tipo_2"})
 
     # Inicializa a variável chain com uma instância de ConversationalRetrievalChain
-    chain = ConversationalRetrievalChain.from_settings({"model": st.session_state["openai_model"], "language": "pt-BR"})
+    chain = ConversationalRetrievalChain(model=st.session_state["openai_model"], language="pt-BR")
     full_response = ""
     if prompt_tipo_2:
         full_response = conversation_chat(prompt_tipo_2, chain, st.session_state.messages.copy())
