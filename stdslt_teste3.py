@@ -1,5 +1,7 @@
 import streamlit as st
 import urllib.request
+import os
+import tempfile
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
@@ -10,14 +12,14 @@ st.title("Este é o ChatBot desenvolvido por Pedro Sampaio Amorim. Inclua um tex
 
 # Carrega o texto diretamente de um link
 file_path1 = "https://raw.githubusercontent.com/pedrosale/falcon_test/main/CTB3.txt"
-    with tempfile.NamedTemporaryFile(delete=False) as temp_file1:
-        temp_file1.write(urllib.request.urlopen(file_path1).read())
-        temp_file_path1 = temp_file1.name
+with tempfile.NamedTemporaryFile(delete=False) as temp_file1:
+    temp_file1.write(urllib.request.urlopen(file_path1).read())
+    temp_file_path1 = temp_file1.name
 
-    text1 = []
-    loader1 = TextLoader(temp_file_path1)
-    text1.extend(loader1.load())
-    os.remove(temp_file_path1)
+text1 = []
+loader1 = TextLoader(temp_file_path1)
+text1.extend(loader1.load())
+os.remove(temp_file_path1)
 
 # Exibe o histórico de mensagens
 if "messages" not in st.session_state:
