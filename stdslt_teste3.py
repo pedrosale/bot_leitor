@@ -25,7 +25,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # Carrega o texto diretamente de um link
-file_path1 = "https://raw.githubusercontent.com/pedrosale/falcon_test/main/PSA"
+file_path1 = "https://raw.githubusercontent.com/pedrosale/falcon_test/main/CTB3.txt"
 conteudo = urllib.request.urlopen(file_path1).read().decode('utf-8')
 
 # Recebe a entrada do usuário do arquivo enviado (Tipo 1)
