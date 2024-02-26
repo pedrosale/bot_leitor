@@ -1,5 +1,5 @@
 openai==0.28.1
-streamlit==1.28.1
+streamlit>=1.30.0
 langchain==0.0.332
 transformers>=4.36.0
 langchain
