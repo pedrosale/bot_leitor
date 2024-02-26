@@ -10,6 +10,8 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 from langchain.chains import ConversationalRetrievalChain
 import os
+import urllib.request
+import tempfile
 
 # Configurações do ChatBot
 st.title("Este é o ChatBot desenvolvido por Pedro Sampaio Amorim. Inclua um texto para debater com o bot!")
@@ -22,18 +24,13 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Verifica se um arquivo foi enviado
-arquivo_upload = st.file_uploader("Escolha um arquivo TXT", type=["txt"])
-if arquivo_upload is not None:
-    st.success("Arquivo enviado com sucesso!")
+# Carrega o texto diretamente de um link
+file_path1 = "https://raw.githubusercontent.com/pedrosale/bot2/main/PSA1.txt?token=GHSAT0AAAAAACOURKTR5EXGE6G4YO3DII7OZO4SRIQ"
+conteudo = urllib.request.urlopen(file_path1).read().decode('utf-8')
 
-    # Lê o conteúdo do arquivo enviado
-    conteudo_bytes = arquivo_upload.read()
-    conteudo = conteudo_bytes.decode('utf-8')  # Converte bytes para string
-
-    # Recebe a entrada do usuário do arquivo enviado (Tipo 1)
-    prompt_tipo_1 = conteudo
-    st.session_state.messages.append({"role": "user", "content": prompt_tipo_1, "tipo": "tipo_1"})
+# Recebe a entrada do usuário do arquivo enviado (Tipo 1)
+prompt_tipo_1 = conteudo
+st.session_state.messages.append({"role": "user", "content": prompt_tipo_1, "tipo": "tipo_1"})
 
 # Exibe o histórico de mensagens
 for message in st.session_state.messages:
