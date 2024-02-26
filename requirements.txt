@@ -17,3 +17,4 @@ replicate
 docx2txt
 requests
 googletrans==4.0.0-rc1
+huggingface-hub
