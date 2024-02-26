@@ -1,28 +1,12 @@
-import openai
 import streamlit as st
-import pandas as pd
-from transformers import GPT2Tokenizer
-from langchain.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.chains.question_answering import load_qa_chain
-from langchain.llms import OpenAI
-from langchain.chains import ConversationalRetrievalChain
-import os
 import urllib.request
-import tempfile
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.chains import ConversationalRetrievalChain
 
 # Configurações do ChatBot
 st.title("Este é o ChatBot desenvolvido por Pedro Sampaio Amorim. Inclua um texto para debater com o bot!")
-
-openai.api_key = st.secrets['OPENAI_API_KEY']
-
-if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = "gpt-3.5-turbo"
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
 
 # Carrega o texto diretamente de um link
 file_path1 = "https://raw.githubusercontent.com/pedrosale/falcon_test/main/CTB3.txt"
@@ -30,9 +14,11 @@ conteudo = urllib.request.urlopen(file_path1).read().decode('utf-8')
 
 # Recebe a entrada do usuário do arquivo enviado (Tipo 1)
 prompt_tipo_1 = conteudo
-st.session_state.messages.append({"role": "user", "content": prompt_tipo_1, "tipo": "tipo_1"})
 
 # Exibe o histórico de mensagens
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 for message in st.session_state.messages:
     if message["role"] == "assistant":
         with st.chat_message("assistant"):
@@ -44,23 +30,27 @@ for message in st.session_state.messages:
         with st.chat_message("user_tipo_2"):
             st.markdown(f"**Usuário:** {message['content']}")
 
+# Dividir o texto em chunks
+text_splitter = CharacterTextSplitter(separator="\n", chunk_size=1000, chunk_overlap=950, length_function=len)
+text_chunks = text_splitter.split_documents(prompt_tipo_1)
+
+# Criar embeddings para os chunks
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={'device': 'cpu'})
+
+# Criar vector store com os embeddings
+vector_store = FAISS.from_documents(text_chunks, embedding=embeddings)
+
+# Criar a cadeia conversacional
+chain = ConversationalRetrievalChain(vector_store)
+
 # Recebe a entrada do usuário (Tipo 2)
-if prompt_tipo_2 := st.text_input("Enviou o texto ? Se sim, o que você gostaria de discutir sobre ele? Caso não queira falar sobre texto, do que deseja falar?"):
+prompt_tipo_2 = st.text_input("Enviou o texto? Se sim, o que você gostaria de discutir sobre ele? Caso não queira falar sobre texto, do que deseja falar?")
+
+if prompt_tipo_2:
     st.session_state.messages.append({"role": "user", "content": prompt_tipo_2, "tipo": "tipo_2"})
 
     # Gera a resposta do ChatBot
     with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        full_response = ""
-        for response in openai.ChatCompletion.create(
-            model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        ):
-            full_response += response.choices[0].delta.get("content", "")
-            message_placeholder.markdown(full_response + "▌")
-        message_placeholder.markdown(full_response)
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
+        response = chain.get_response(prompt_tipo_2)
+        st.write(response)
+        st.session_state.messages.append({"role": "assistant", "content": response})
