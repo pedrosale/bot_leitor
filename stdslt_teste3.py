@@ -37,7 +37,7 @@ text1.extend(loader1.load())
 os.remove(temp_file_path1)
 
 # Recebe a entrada do usuário do arquivo enviado (Tipo 1)
-prompt_tipo_1 = text1
+prompt_tipo_1 = "\n".join(text1)
 st.session_state.messages.append({"role": "user", "content": prompt_tipo_1, "tipo": "tipo_1"})
 
 # Exibe o histórico de mensagens
