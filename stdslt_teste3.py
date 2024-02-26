@@ -1,12 +1,18 @@
 import streamlit as st
-import urllib.request
-import os
-import tempfile
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
+from streamlit_chat import message
 from langchain.chains import ConversationalRetrievalChain
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.llms import Replicate
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain.memory import ConversationBufferMemory
 from langchain.document_loaders import TextLoader
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+import os
+from dotenv import load_dotenv
+import tempfile
+import urllib.request
+
 
 
 # Configurações do ChatBot
