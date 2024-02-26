@@ -26,10 +26,17 @@ if "messages" not in st.session_state:
 
 # Carrega o texto diretamente de um link
 file_path1 = "https://raw.githubusercontent.com/pedrosale/falcon_test/main/PSA"
-conteudo = urllib.request.urlopen(file_path1).read().decode('utf-8')
+with tempfile.NamedTemporaryFile(delete=False) as temp_file1:
+        temp_file1.write(urllib.request.urlopen(file_path1).read())
+        temp_file_path1 = temp_file1.name
+
+    text1 = []
+    loader1 = TextLoader(temp_file_path1)
+    text1.extend(loader1.load())
+    os.remove(temp_file_path1)
 
 # Recebe a entrada do usuário do arquivo enviado (Tipo 1)
-prompt_tipo_1 = conteudo
+prompt_tipo_1 = text1
 st.session_state.messages.append({"role": "user", "content": prompt_tipo_1, "tipo": "tipo_1"})
 
 # Exibe o histórico de mensagens
