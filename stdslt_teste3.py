@@ -10,10 +10,14 @@ st.title("Este é o ChatBot desenvolvido por Pedro Sampaio Amorim. Inclua um tex
 
 # Carrega o texto diretamente de um link
 file_path1 = "https://raw.githubusercontent.com/pedrosale/falcon_test/main/CTB3.txt"
-conteudo = urllib.request.urlopen(file_path1).read().decode('utf-8')
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file1:
+        temp_file1.write(urllib.request.urlopen(file_path1).read())
+        temp_file_path1 = temp_file1.name
 
-# Recebe a entrada do usuário do arquivo enviado (Tipo 1)
-prompt_tipo_1 = conteudo
+    text1 = []
+    loader1 = TextLoader(temp_file_path1)
+    text1.extend(loader1.load())
+    os.remove(temp_file_path1)
 
 # Exibe o histórico de mensagens
 if "messages" not in st.session_state:
@@ -32,7 +36,7 @@ for message in st.session_state.messages:
 
 # Dividir o texto em chunks
 text_splitter = CharacterTextSplitter(separator="\n", chunk_size=1000, chunk_overlap=950, length_function=len)
-text_chunks = text_splitter.split_documents(prompt_tipo_1)
+text_chunks = text_splitter.split_documents(text1)
 
 # Criar embeddings para os chunks
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={'device': 'cpu'})
